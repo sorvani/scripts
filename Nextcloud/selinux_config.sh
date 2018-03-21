@@ -12,4 +12,4 @@ semanage fcontext -a -t ${httpdrw} "${ocpath}/data(/.*)?"
 semanage fcontext -a -t ${httpdrw} "${ocpath}/updater(/.*)?"
 semanage fcontext -a -t ${httpdrw} '${ocpath}/.htaccess'
 semanage fcontext -a -t ${httpdrw} '${ocpath}/.user.ini'
-restorecon -Rv ${ocpath}
+restorecon -FRv ${ocpath}
