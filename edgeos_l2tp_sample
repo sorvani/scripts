@@ -1,0 +1,37 @@
+# Firewall settings
+# By allowing everything that is IPSEC, You do not need to allow individual things for L2TP
+# The rule number can be whatever you want
+set firewall name WAN_LOCAL rule 99 action accept
+set firewall name WAN_LOCAL rule 99 description 'Allow IPSEC'
+set firewall name WAN_LOCAL rule 99 ipsec match-ipsec
+set firewall name WAN_LOCAL rule 99 log disable
+set firewall name WAN_LOCAL rule 99 protocol all
+set firewall name WAN_LOCAL rule 99 state established disable
+set firewall name WAN_LOCAL rule 99 state invalid disable
+set firewall name WAN_LOCAL rule 99 state new enable
+set firewall name WAN_LOCAL rule 99 state related disable
+
+# IPSEC settings
+# I totally cannot recall if these are required. I rarely setup L2TP without also having IPSEC for other reasons.
+set vpn ipsec auto-firewall-nat-exclude enable
+set vpn ipsec ipsec-interfaces interface eth0
+
+# L2TP settings
+set vpn l2tp remote-access authentication local-users username someusername password somesupersecretpassword
+set vpn l2tp remote-access authentication mode local
+set vpn l2tp remote-access authentication require mschap-v2
+#Set this to a start and stop of whatever you want that does not conflict with anything on your LAN
+# My LAN is 10.254.103.0/24, so 10.254.203.2 - 10.254.203.10 is safe.
+set vpn l2tp remote-access client-ip-pool start 10.254.203.2
+set vpn l2tp remote-access client-ip-pool stop 10.254.203.10
+# If your WAN is not DHCP I forget what this need to be off the top of my head
+set vpn l2tp remote-access dhcp-interface eth0
+# Use whatever DNS you want.
+set vpn l2tp remote-access dns-servers server-1 1.1.1.1
+set vpn l2tp remote-access dns-servers server-2 1.0.0.1
+set vpn l2tp remote-access idle 1800
+set vpn l2tp remote-access ipsec-settings authentication mode pre-shared-secret
+set vpn l2tp remote-access ipsec-settings authentication pre-shared-secret somesupersecretpresharedkeyforipsec
+set vpn l2tp remote-access ipsec-settings ike-lifetime 3600
+set vpn l2tp remote-access ipsec-settings lifetime 3600
+set vpn l2tp remote-access mtu 1492
